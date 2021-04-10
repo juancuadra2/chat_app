@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/mostrar_dialog.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/custom_boton.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/custom_labels.dart';
 import 'package:chat_app/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -52,6 +55,9 @@ class _FormState extends State<Form> {
 
   @override
   Widget build(BuildContext context) {
+
+    final service = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric( horizontal: 50 ),
@@ -67,7 +73,7 @@ class _FormState extends State<Form> {
 
           CustomInput(
             icon: Icons.vpn_key,
-            placeholder: 'Email',
+            placeholder: 'Password',
             keyboardType: TextInputType.emailAddress,
             textController: passwordController,
             isPassword: true,
@@ -75,7 +81,16 @@ class _FormState extends State<Form> {
 
           CustomButton(
             text: 'Ingresar',
-            onPressed: (){},
+            onPressed: service.loading ? null : ()async{
+              FocusScope.of(context).unfocus();
+              print('hola');
+              final loginOk = await service.login(emailController.text.trim(), passwordController.text.trim());
+              if (loginOk) {
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              }else{
+                mostrarAlerta(context, "Error al autenticarse", "Revise sus credenciales");
+              }
+            },
           ),
 
         ],

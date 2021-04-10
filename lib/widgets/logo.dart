@@ -14,7 +14,7 @@ class Logo extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              Image(image: AssetImage('assets/tag-logo.png')),
+              Image(image: AssetImage('assets/logo-empresa.png')),
               Text(this.titulo, style: TextStyle(fontSize: 30),)
             ],
           ),

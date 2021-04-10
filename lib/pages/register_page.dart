@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/mostrar_dialog.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/custom_boton.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/custom_labels.dart';
 import 'package:chat_app/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -51,6 +54,7 @@ class _FormState extends State<Form> {
 
   @override
   Widget build(BuildContext context) {
+    final service = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric( horizontal: 50 ),
@@ -81,7 +85,15 @@ class _FormState extends State<Form> {
 
           CustomButton(
             text: 'Registrarse',
-            onPressed: (){},
+            onPressed: service.loading ? null : ()async{
+              FocusScope.of(context).unfocus();
+              final res = await service.register(nameController.text, emailController.text, passwordController.text);
+              if (res == true) {
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              }else{
+                mostrarAlerta(context, "Error al registrarse", res);
+              }
+            },
           ),
 
         ],
