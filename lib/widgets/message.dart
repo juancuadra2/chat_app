@@ -1,4 +1,6 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Message extends StatelessWidget {
   const Message({Key key, this.texto, this.uid}) : super(key: key);
@@ -8,8 +10,9 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthService authService = Provider.of<AuthService>(context, listen: false);
     return Container(
-      child: this.uid == '123' ? _myMessage() : _otherMessage(),
+      child: this.uid == authService.usuario.uid ? _myMessage() : _otherMessage(),
     );
   }
 

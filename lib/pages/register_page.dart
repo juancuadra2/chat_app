@@ -1,5 +1,6 @@
 import 'package:chat_app/helpers/mostrar_dialog.dart';
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/custom_boton.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/custom_labels.dart';
@@ -55,6 +56,7 @@ class _FormState extends State<Form> {
   @override
   Widget build(BuildContext context) {
     final service = Provider.of<AuthService>(context);
+    final SocketService socketService = Provider.of<SocketService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric( horizontal: 50 ),
@@ -89,6 +91,7 @@ class _FormState extends State<Form> {
               FocusScope.of(context).unfocus();
               final res = await service.register(nameController.text, emailController.text, passwordController.text);
               if (res == true) {
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               }else{
                 mostrarAlerta(context, "Error al registrarse", res);

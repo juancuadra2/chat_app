@@ -1,5 +1,6 @@
 import 'package:chat_app/helpers/mostrar_dialog.dart';
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/custom_boton.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/custom_labels.dart';
@@ -57,6 +58,7 @@ class _FormState extends State<Form> {
   Widget build(BuildContext context) {
 
     final service = Provider.of<AuthService>(context);
+    final SocketService socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -83,9 +85,9 @@ class _FormState extends State<Form> {
             text: 'Ingresar',
             onPressed: service.loading ? null : ()async{
               FocusScope.of(context).unfocus();
-              print('hola');
               final loginOk = await service.login(emailController.text.trim(), passwordController.text.trim());
               if (loginOk) {
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               }else{
                 mostrarAlerta(context, "Error al autenticarse", "Revise sus credenciales");

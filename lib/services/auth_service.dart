@@ -86,7 +86,6 @@ class AuthService with ChangeNotifier {
 
   Future<bool> isLoggedIn() async{
     final token = await this._storage.read(key: 'token');
-    print(token);
     final res = await http.get(
       Uri.parse('${ Enviroment.apiUrl }/login/renovarJTW'),
       headers: {
@@ -94,7 +93,6 @@ class AuthService with ChangeNotifier {
         'x-token': token
       }
     );
-    print(res.body);
     if (res.statusCode == 200) { 
       final response = loginResponseFromJson(res.body);
       this.usuario = response.usuario;
